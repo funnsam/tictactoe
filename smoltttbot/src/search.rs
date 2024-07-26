@@ -1,16 +1,18 @@
 use crate::{board::*, eval::*};
 
-pub fn search(b: Board, depth: usize) -> (Line, i16) {
+pub fn search(b: Board, depth: usize) -> (Line, i16, usize) {
     let mut line = Line::default();
+    let mut count = 0;
 
-    let eval = -search_inner(b, i16::MIN / 2 - 69, i16::MAX / 2 + 69, depth, &mut line);
+    let eval = -search_inner(b, i16::MIN / 2 - 69, i16::MAX / 2 + 69, depth, &mut line, &mut count);
 
-    (line, eval)
+    (line, eval, count)
 }
 
-fn search_inner(b: Board, mut alpha: i16, beta: i16, depth: usize, pline: &mut Line) -> i16 {
+fn search_inner(b: Board, mut alpha: i16, beta: i16, depth: usize, pline: &mut Line, count: &mut usize) -> i16 {
     if depth == 0 || b.is_full() || b.side_won().is_some() {
         pline.c = 0;
+        *count += 1;
         return eval(b);
     }
 
@@ -20,7 +22,7 @@ fn search_inner(b: Board, mut alpha: i16, beta: i16, depth: usize, pline: &mut L
         let mut b = b.clone();
         b.play(m).unwrap();
 
-        let eval = -search_inner(b, -beta, -alpha, depth - 1, &mut line);
+        let eval = -search_inner(b, -beta, -alpha, depth - 1, &mut line, count);
 
         if eval >= beta { return beta; }
 

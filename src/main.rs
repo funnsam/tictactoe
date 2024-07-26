@@ -1,8 +1,4 @@
-use search::search;
-
-pub mod board;
-pub mod eval;
-pub mod search;
+use smoltttbot::*;
 
 fn main() {
     crossterm::execute!(std::io::stdout(), crossterm::event::EnableMouseCapture).unwrap();
@@ -15,10 +11,10 @@ fn main() {
     }
 
     loop {
-        let (l, eval) = search(b, 9);
+        let (l, eval, count) = search::search(b, 9);
 
         b.play_unchecked(l.m[0]);
-        println!("\x1b[2J\x1b[H{b}Eval: {eval}, PV: {l:?}, {:?} side to move", b.side_to_move());
+        println!("\x1b[2J\x1b[H{b}Eval: {eval}, PV: {l:?}, Evaluated: {count}, {:?} side to move", b.side_to_move());
 
         if b.side_won().is_some() || b.is_full() {
             println!("{:?}", b.side_won());

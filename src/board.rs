@@ -17,7 +17,7 @@ pub enum Side {
     O,
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Default, PartialEq, Eq)]
 pub struct Square(u8); // 0000 yyxx
 
 impl Board {
@@ -89,6 +89,10 @@ impl Board {
             square_idx: self.side_won().map_or(0, |_| usize::MAX),
         }
     }
+
+    pub fn is_full(&self) -> bool {
+        self.x | self.o == 0b111_0111_0111
+    }
 }
 
 impl core::ops::Neg for Side {
@@ -119,7 +123,7 @@ impl Square {
     }
 }
 
-const WIN_PATTERNS: &[u16] = &[
+pub const WIN_PATTERNS: &[u16] = &[
     0b001_0001_0001, // vert
     0b010_0010_0010,
     0b100_0100_0100,
@@ -130,7 +134,7 @@ const WIN_PATTERNS: &[u16] = &[
     0b001_0010_0100,
 ];
 
-const SQUARES: &[Square] = &[
+pub const SQUARES: &[Square] = &[
     Square::new(0, 0),
     Square::new(1, 0),
     Square::new(2, 0),
@@ -158,6 +162,15 @@ impl fmt::Display for Board {
         }
 
         Ok(())
+    }
+}
+
+impl fmt::Debug for Square {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_tuple("")
+            .field(&self.x())
+            .field(&self.y())
+            .finish()
     }
 }
 

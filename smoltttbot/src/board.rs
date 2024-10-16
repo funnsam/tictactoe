@@ -5,9 +5,9 @@ pub struct Board {
     // 04 │ 05 │ 06
     // ───┼────┼───
     // 08 │ 09 │ 10
-    x: u16,
-    o: u16,
-    side_to_move: Side,
+    pub x: u16,
+    pub o: u16,
+    pub side_to_move: Side,
 }
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
